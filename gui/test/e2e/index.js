@@ -1,14 +1,18 @@
-import IndexPage from './page-model';
+'use strict'
 
-fixture `Index page`
-    .page('http://localhost:4000');
+// Set BABEL_ENV to use proper env config
+process.env.BABEL_ENV = 'test'
 
-const page = new IndexPage();
+// Enable use of ES6+ on required files
+require('babel-register')({
+  ignore: /node_modules/
+})
 
-test('first test', async t => {
-    await t.expect(page.counter.innerText).contains('0')
-        .click(page.increment)
-        .expect(page.counter.innerText).contains('1')
-        .click(page.desrement)
-        .expect(page.counter.innerText).contains('0');
-});
+// Attach Chai APIs to global scope
+const { expect, should, assert } = require('chai')
+global.expect = expect
+global.should = should
+global.assert = assert
+
+// Require all JS files in `./specs` for Mocha to consume
+require('require-dir')('./specs')
