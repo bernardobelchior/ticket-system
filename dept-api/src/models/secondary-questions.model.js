@@ -5,18 +5,22 @@ const DataTypes = Sequelize.DataTypes
 
 module.exports = function (app) {
   const sequelizeClient = app.get('sequelizeClient')
-  const users = sequelizeClient.define('users', {
-
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
-    },
-    password: {
+  const secondaryQuestions = sequelizeClient.define('secondary_questions', {
+    title: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    answer: {
+      type: DataTypes.STRING
+    },
+    state: {
+      type: DataTypes.ENUM,
+      values: ['unassigned', 'assigned', 'waiting_for_answers', 'solved']
     }
-
   }, {
     hooks: {
       beforeCount (options) {
@@ -25,11 +29,9 @@ module.exports = function (app) {
     }
   })
 
-  // eslint-disable-next-line no-unused-vars
-  users.associate = function (models) {
-    // Define associations here
-    // See http://docs.sequelizejs.com/en/latest/docs/associations/
+  secondaryQuestions.associate = function (models) {
+    secondaryQuestions.belongsTo(models.users)
   }
 
-  return users
+  return secondaryQuestions
 }

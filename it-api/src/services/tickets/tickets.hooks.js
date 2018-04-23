@@ -1,9 +1,8 @@
-// Application hooks that run for every service
-const logger = require('./hooks/logger')
+const {authenticate} = require('@feathersjs/authentication').hooks
 
 module.exports = {
   before: {
-    all: [logger()],
+    all: [authenticate('jwt')],
     find: [],
     get: [],
     create: [],
@@ -13,7 +12,7 @@ module.exports = {
   },
 
   after: {
-    all: [logger()],
+    all: [],
     find: [],
     get: [],
     create: [],
@@ -23,7 +22,7 @@ module.exports = {
   },
 
   error: {
-    all: [logger()],
+    all: [],
     find: [],
     get: [],
     create: [],
