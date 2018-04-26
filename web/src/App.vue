@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <header>
-      <span>Ticket System</span>
+      <a href="#/">Ticket System</a>
     </header>
     <main>
       <router-view></router-view>
@@ -28,7 +28,6 @@ body {
 }
 
 main {
-  text-align: center;
   margin-top: 40px;
 }
 
@@ -40,7 +39,7 @@ header {
   color: #ffffff;
 }
 
-header span {
+header a {
   display: block;
   position: relative;
   font-size: 20px;
@@ -49,5 +48,7 @@ header span {
   font-weight: 400;
   box-sizing: border-box;
   padding-top: 16px;
+  text-decoration: none;
+  color: white;
 }
 </style>

@@ -10,6 +10,7 @@ import auth from '@feathersjs/authentication-client'
 
 import App from './App'
 import router from './router'
+import store from './store'
 
 const feathers = Feathers()
 const restClient = rest(process.env.API_BASE_URL)
@@ -27,6 +28,7 @@ Vue.use(ElementUI)
 new Vue({
   el: '#app',
   router,
+  store,
   data: {
     feathers
   },

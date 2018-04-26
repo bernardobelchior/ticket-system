@@ -4,13 +4,13 @@
       Login
     </div>
     <el-form :model="form" label-width="120px">
-      <el-form-item label="Username">
-        <el-input v-model="username" placeholder="Username"></el-input>
+      <el-form-item label="Email">
+        <el-input v-model="form.email" placeholder="Email"></el-input>
       </el-form-item>
       <el-form-item label="Password">
-        <el-input v-model="password" type="password"></el-input>
+        <el-input v-model="form.password" type="password"></el-input>
       </el-form-item>
-      <el-button type="primary" @click="submit">Login</el-button>
+      <el-button type="primary" @click="submit" :loading="loginLoading">Login</el-button>
     </el-form>
   </el-card>
 </template>
@@ -21,21 +21,31 @@
     data: function () {
       return {
         form: {
-          username: '',
+          email: '',
           password: ''
-        }
+        },
+        loginLoading: false
       }
     },
     methods: {
       submit: function () {
+        this.loginLoading = true
         this.$root.$data.feathers.authenticate({
           strategy: 'local',
-          email: this.form.username,
+          email: this.form.email,
           password: this.form.password
-        }).then(result => {
-          console.log(result)
+        }).then(() => {
+          this.loginLoading = false
+          this.$router.push('/tickets/create')
         }).catch(e => {
-          console.log(e)
+          this.loginLoading = false
+          console.error(e)
+
+          this.$message({
+            type: 'error',
+            message: 'Login failed',
+            showClose: true
+          })
         })
       }
     }

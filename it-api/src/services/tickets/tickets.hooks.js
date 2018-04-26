@@ -1,11 +1,15 @@
 const {authenticate} = require('@feathersjs/authentication').hooks
 
+const attachUserId = hook => {
+  hook.data.userId = hook.params.payload.userId
+}
+
 module.exports = {
   before: {
     all: [authenticate('jwt')],
     find: [],
     get: [],
-    create: [],
+    create: [attachUserId],
     update: [],
     patch: [],
     remove: []

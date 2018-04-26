@@ -7,15 +7,15 @@ module.exports = function (app) {
   const sequelizeClient = app.get('sequelizeClient')
   const secondaryQuestions = sequelizeClient.define('secondary_questions', {
     title: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     description: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     answer: {
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
     },
     state: {
       type: DataTypes.ENUM,
@@ -30,7 +30,7 @@ module.exports = function (app) {
   })
 
   secondaryQuestions.associate = function (models) {
-    secondaryQuestions.belongsTo(models.users)
+    secondaryQuestions.belongsTo(models.users, {foreignKey: {allowNull: false}})
   }
 
   return secondaryQuestions

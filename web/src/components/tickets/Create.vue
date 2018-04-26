@@ -35,9 +35,19 @@
     methods: {
       submit: function () {
         this.$root.$data.feathers.service('tickets').create(this.form).then(result => {
-          console.log(result)
+          this.$message({
+            type: 'success',
+            message: 'Ticket successfully created.',
+            showClose: true
+          })
+          this.$router.push('/tickets/show/' + result.id)
         }).catch(e => {
-          console.log(e)
+          this.$message({
+            type: 'error',
+            message: 'Could not create ticket.',
+            showClose: true
+          })
+          console.error(e)
         })
       }
     }
