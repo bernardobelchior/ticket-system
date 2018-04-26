@@ -20,7 +20,7 @@
   import VueMarkdown from 'vue-markdown'
 
   export default {
-    name: 'hello',
+    name: 'create-ticket',
     components: {
       VueMarkdown
     },
