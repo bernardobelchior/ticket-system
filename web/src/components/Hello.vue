@@ -1,20 +1,55 @@
 <template>
-  <div class="hello">
-    <el-button>Goods</el-button>
-  </div>
+  <el-form :model="form" class="form" label-width="120px">
+    <el-form-item label="Title">
+      <el-input placeholder="Title" v-model="form.title"></el-input>
+    </el-form-item>
+    <el-form-item label="Description">
+      <el-input type="textarea" v-model="form.description" :rows="5" placeholder="Description"></el-input>
+    </el-form-item>
+    <el-form-item label="Preview">
+      <vue-markdown class="el-textarea el-textarea__inner" style="text-align: left; min-height: 120px;" :source="form.description"></vue-markdown>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="submit">Create</el-button>
+    </el-form-item>
+  </el-form>
 </template>
 
 <script>
-export default {
-  name: 'hello',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js PWA'
+  import VueMarkdown from 'vue-markdown'
+
+  export default {
+    name: 'hello',
+    components: {
+      VueMarkdown
+    },
+    data () {
+      return {
+        form: {
+          title: '',
+          description: ''
+        }
+      }
+    },
+    methods: {
+      submit: function () {
+        console.log(this.form)
+      }
     }
   }
-}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
+<style scoped>
+  @media (max-width: 800px) {
+    .form {
+      width: 100%;
+      margin: auto;
+    }
+  }
+
+  .form {
+    width: 800px;
+    margin: auto;
+  }
 </style>
