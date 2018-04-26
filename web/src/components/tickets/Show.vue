@@ -1,15 +1,13 @@
 <template>
   <el-card class="show-card">
-    <div slot="header">
-      <span>{{form.title}}</span>
-    </div>
-    <vue-markdown style="min-height: 120px;" :source="form.description"></vue-markdown>
-    <el-form-item label="State">
+    <el-row slot="header" type="flex" justify="space-between">
+      <h2 style="margin:10px 0 0 0">{{form.title}}</h2>
       <el-select v-model="form.state" disabled>
         <el-option v-for="state in possibleStates" :key="state.value" :label="state.label"
                    :value="state.value"></el-option>
       </el-select>
-    </el-form-item>
+    </el-row>
+    <vue-markdown style="min-height: 120px;" :source="form.description"></vue-markdown>
   </el-card>
 </template>
 
