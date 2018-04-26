@@ -7,7 +7,8 @@
       <el-input type="textarea" v-model="form.description" :rows="5" placeholder="Description"></el-input>
     </el-form-item>
     <el-form-item label="Preview">
-      <vue-markdown class="el-textarea el-textarea__inner" style="text-align: left; min-height: 120px;" :source="form.description"></vue-markdown>
+      <vue-markdown class="el-textarea el-textarea__inner" style="text-align: left; min-height: 120px;"
+                    :source="form.description"></vue-markdown>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submit">Create</el-button>
@@ -33,7 +34,11 @@
     },
     methods: {
       submit: function () {
-        console.log(this.form)
+        this.$root.$data.feathers.service('tickets').create(this.form).then(result => {
+          console.log(result)
+        }).catch(e => {
+          console.log(e)
+        })
       }
     }
   }
