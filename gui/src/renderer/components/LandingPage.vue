@@ -6,10 +6,10 @@
       </div>
       <el-row type="flex" justify="center">
         <el-col :span="6">
-          <el-button>Sign-In</el-button>
+          <router-link to="login"><el-button type="primary">Sign-In</el-button></router-link>
         </el-col>
         <el-col :span="6">
-          <el-button>Sign-Up</el-button>
+          <router-link to="signup"><el-button type="primary">Sign-Up</el-button></router-link>
         </el-col>
       </el-row>
     </el-card>
