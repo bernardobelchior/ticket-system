@@ -36,6 +36,7 @@
           password: this.form.password
         }).then(() => {
           this.loginLoading = false
+          this.$store.commit('login')
           this.$router.push('/tickets/create')
         }).catch(e => {
           this.loginLoading = false

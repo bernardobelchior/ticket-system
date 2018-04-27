@@ -3,11 +3,21 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-const state = {}
+const state = {
+  loggedIn: !!window.localStorage.getItem('feathers-jwt')
+}
 
 const getters = {}
 
-const mutations = {}
+const mutations = {
+  logout: function (state) {
+    window.localStorage.removeItem('feathers-jwt')
+    state.loggedIn = false
+  },
+  login: function (state) {
+    state.loggedIn = true
+  }
+}
 
 const actions = {}
 

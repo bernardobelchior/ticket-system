@@ -1,16 +1,9 @@
 <template>
   <div id="app">
-    <header>
-      <el-col :span="12">
-        <a href="#/">Ticket System</a>
-      </el-col>
-      <el-col :span="12">
-        <el-menu default-active="/" router mode="horizontal">
-          <el-menu-item index="/login">Login</el-menu-item>
-          <el-menu-item index="/signup">Sign Up</el-menu-item>
-        </el-menu>
-      </el-col>
-    </header>
+    <el-menu default-active="/" router mode="horizontal" text-color="white" background-color="#35495E"
+             active-text-color="white">
+      <el-menu-item v-for="route in routes" :index="route.path">{{route.label}}</el-menu-item>
+    </el-menu>
     <main>
       <router-view></router-view>
     </main>
@@ -19,7 +12,29 @@
 
 <script>
   export default {
-    name: 'app'
+    name: 'app',
+    computed: {
+      routes: function () {
+        const isLoggedIn = this.$store.state.loggedIn
+        const availableRoutes = []
+
+        for (let route of this.$router.options.routes) {
+          if (route.meta && route.meta.showOnNavbar === false) {
+            continue
+          }
+
+          if (route.meta && route.meta.requiresAuth && isLoggedIn) {
+            availableRoutes.push(route)
+          } else if (route.meta && route.meta.requiresNoAuth && !isLoggedIn) {
+            availableRoutes.push(route)
+          } else if (!route.meta) {
+            availableRoutes.push(route)
+          }
+        }
+
+        return availableRoutes
+      }
+    }
   }
 </script>
 
@@ -37,26 +52,5 @@
 
   main {
     margin-top: 40px;
-  }
-
-  header {
-    margin: 0;
-    height: 56px;
-    padding: 0 16px 0 24px;
-    background-color: #35495E;
-    color: #ffffff;
-  }
-
-  header a {
-    display: block;
-    position: relative;
-    font-size: 20px;
-    line-height: 1;
-    letter-spacing: .02em;
-    font-weight: 400;
-    box-sizing: border-box;
-    padding-top: 16px;
-    text-decoration: none;
-    color: white;
   }
 </style>
