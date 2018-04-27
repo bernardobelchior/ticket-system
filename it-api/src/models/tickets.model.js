@@ -32,6 +32,7 @@ module.exports = function (app) {
 
   tickets.associate = function (models) {
     tickets.belongsTo(models.users, {foreignKey: {allowNull: false}})
+    tickets.belongsTo(models.solvers, {foreignKey: {allowNull: true}})
   }
 
   return tickets

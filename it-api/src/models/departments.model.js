@@ -20,8 +20,7 @@ module.exports = function (app) {
 
   // eslint-disable-next-line no-unused-vars
   departments.associate = function (models) {
-    // Define associations here
-    // See http://docs.sequelizejs.com/en/latest/docs/associations/
+    models.solvers.belongsTo(departments, {foreignKey: {allowNull: false}})
   }
 
   return departments

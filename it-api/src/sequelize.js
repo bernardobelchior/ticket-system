@@ -1,5 +1,7 @@
 const Sequelize = require('sequelize')
-const {Op} = Sequelize
+const {
+  Op
+} = Sequelize
 const operatorsAliases = {
   $eq: Op.eq,
   $ne: Op.ne,
@@ -64,6 +66,11 @@ module.exports = function (app) {
 
     // Sync to the database
     sequelize.sync()
+    
+    // How to verify if exists before create?
+    /*app.service('departments').create({
+      name: 'IT'
+    });*/
 
     return result
   }
