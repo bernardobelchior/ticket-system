@@ -11,17 +11,26 @@ export default new Router({
     {
       path: '/',
       name: 'landing-page',
+      label: 'Home',
       component: LandingPage
     },
     {
       path: '/signup',
       name: 'sign-up',
-      component: SignUp
+      label: 'Sign-up',
+      component: SignUp,
+      meta: {
+        requiresNoAuth: true
+      }
     },
     {
       path: '/login',
       name: 'login',
-      component: Login
+      label: 'Login',
+      component: Login,
+      meta: {
+        requiresNoAuth: true
+      }
     },
     {
       path: '*',

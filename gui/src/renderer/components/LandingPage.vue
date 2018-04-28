@@ -1,19 +1,12 @@
 <template>
-  <div id="wrapper">
-    <el-card id="card-style">
-      <div slot="header" style="text-align: center;">
-        <h1>Ticket System</h1>
-      </div>
-      <el-row type="flex" justify="center">
-        <el-col :span="6">
-          <router-link to="login"><el-button type="primary">Sign-In</el-button></router-link>
-        </el-col>
-        <el-col :span="6">
-          <router-link to="signup"><el-button type="primary">Sign-Up</el-button></router-link>
-        </el-col>
-      </el-row>
-    </el-card>
-  </div>
+  <el-card class="card">
+    <div slot="header">
+      <h2 style="margin: 0;">Welcome!</h2>
+    </div>
+    <div>
+      Welcome to the Ticket System!
+    </div>
+  </el-card>
 </template>
 
 <script>
@@ -32,7 +25,7 @@
 
 <style scoped>
 
-#card-style {
+.card {
   max-width: 500px;
   margin: auto;
 }

@@ -10,7 +10,6 @@
       <el-form-item label="Password">
         <el-input v-model="form.password" type="password"></el-input>
       </el-form-item>
-      <router-link to="/"><el-button type="primary">Back</el-button></router-link>
       <el-button type="primary" @click="submit" :loading="loginLoading">Login</el-button>
     </el-form>
   </el-card>
