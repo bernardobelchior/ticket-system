@@ -10,24 +10,19 @@
 </template>
 
 <script>
-  import SystemInformation from './LandingPage/SystemInformation'
-
-  export default {
-    name: 'landing-page',
-    components: {SystemInformation},
-    methods: {
-      open (link) {
-        this.$electron.shell.openExternal(link)
-      }
+export default {
+  name: 'landing-page',
+  methods: {
+    open (link) {
+      this.$electron.shell.openExternal(link)
     }
   }
+}
 </script>
 
 <style scoped>
-
 .card {
   max-width: 500px;
   margin: auto;
 }
-
 </style>

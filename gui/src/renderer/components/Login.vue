@@ -39,7 +39,8 @@ export default {
         })
         .then(() => {
           this.loginLoading = false
-          this.$router.push('/')
+          this.$store.commit('login')
+          this.$router.push('/tickets/create')
         })
         .catch(e => {
           this.loginLoading = false
