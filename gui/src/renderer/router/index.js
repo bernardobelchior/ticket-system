@@ -15,19 +15,19 @@ export default new Router({
       component: LandingPage
     },
     {
-      path: '/signup',
-      name: 'sign-up',
-      label: 'Sign-up',
-      component: SignUp,
+      path: '/login',
+      name: 'login',
+      label: 'Login',
+      component: Login,
       meta: {
         requiresNoAuth: true
       }
     },
     {
-      path: '/login',
-      name: 'login',
-      label: 'Login',
-      component: Login,
+      path: '/signup',
+      name: 'sign-up',
+      label: 'Sign-up',
+      component: SignUp,
       meta: {
         requiresNoAuth: true
       }

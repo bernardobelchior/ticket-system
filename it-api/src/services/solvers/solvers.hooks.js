@@ -4,12 +4,20 @@ const {
   hashPassword, protect
 } = require('@feathersjs/authentication-local').hooks
 
+const getSolverDepartment = async context => {
+  const itDept = await context.app.service('departments').find({
+    name: 'IT'
+  })
+
+  context.data.departmentId = itDept.data[0].id
+}
+
 module.exports = {
   before: {
     all: [],
     find: [authenticate('jwt')],
     get: [authenticate('jwt')],
-    create: [hashPassword()],
+    create: [hashPassword(), getSolverDepartment],
     update: [hashPassword(), authenticate('jwt')],
     patch: [hashPassword(), authenticate('jwt')],
     remove: [authenticate('jwt')]

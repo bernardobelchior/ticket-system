@@ -52,9 +52,9 @@ export default {
   },
   methods: {
     submit: function () {
-      /* this.signUpLoading = true
+      this.signUpLoading = true
       this.$root.$data.feathers
-        .service('users')
+        .service('solvers')
         .create({
           name: this.form.name,
           email: this.form.email,
@@ -84,7 +84,7 @@ export default {
               showClose: true
             })
           }
-        }) */
+        })
     }
   }
 }

@@ -122,6 +122,9 @@ let rendererConfig = {
         ? path.resolve(__dirname, '../node_modules')
         : false
     }),
+    new webpack.DefinePlugin({
+      'process.env.API_BASE_URL': '"http://localhost:3030"'
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
   ],
