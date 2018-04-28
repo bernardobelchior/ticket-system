@@ -4,7 +4,7 @@ import LandingPage from '@/components/LandingPage'
 import SignUp from '@/components/SignUp'
 import Login from '@/components/Login'
 import Logout from '@/components/Logout'
-import CreateTicket from '@/components/tickets/Create'
+import ShowTickets from '@/components/tickets/ShowAll'
 
 Vue.use(Router)
 
@@ -32,9 +32,9 @@ export default new Router({
       }
     },
     {
-      path: '/tickets/create',
-      label: 'Create Ticket',
-      component: CreateTicket,
+      path: '/tickets/show',
+      label: 'Show Tickets',
+      component: ShowTickets,
       meta: {
         requiresAuth: true
       }
