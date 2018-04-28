@@ -8,6 +8,7 @@
       </el-select>
     </el-row>
     <vue-markdown style="min-height: 120px;" :source="form.description"></vue-markdown>
+    <el-button v-if="form.state === 'unassigned'" type="primary" @click="assignTicket" :loading="assignLoading">Assign Ticket to Me</el-button>
   </el-card>
 </template>
 
@@ -42,7 +43,8 @@
             value: 'solved',
             label: 'Solved'
           }
-        ]
+        ],
+        assignLoading: false
       }
     },
     mounted: function () {
@@ -50,6 +52,33 @@
       this.$root.$data.feathers.service('tickets').get(ticketId).then(result => {
         this.$set(this, 'form', result)
       })
+    },
+    methods: {
+      assignTicket: function () {
+        this.signUpLoading = true
+        this.$root.$data.feathers
+          .service('tickets')
+          .patch(this.$route.params.id, {
+            state: 'assigned'
+          })
+          .then(() => {
+            this.signUpLoading = false
+            this.$message({
+              type: 'success',
+              message: 'Ticket assigned!',
+              showClose: true
+            })
+            this.form.state = 'assigned'
+          })
+          .catch(e => {
+            this.signUpLoading = false
+            this.$message({
+              type: 'error',
+              message: 'Error!',
+              showClose: true
+            })
+          })
+      }
     }
   }
 </script>

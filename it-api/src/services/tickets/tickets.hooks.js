@@ -1,7 +1,11 @@
 const {authenticate} = require('@feathersjs/authentication').hooks
 
 const attachUserId = hook => {
-  hook.data.userId = hook.params.payload.userId
+  hook.data.userId = hook.params.payload.id
+}
+
+const attachSolverId = hook => {
+  hook.data.solverId = hook.params.payload.id
 }
 
 module.exports = {
@@ -11,7 +15,7 @@ module.exports = {
     get: [],
     create: [attachUserId],
     update: [],
-    patch: [],
+    patch: [attachSolverId],
     remove: []
   },
 
