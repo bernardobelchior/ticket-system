@@ -38,8 +38,8 @@
     },
     methods: {
       submit: function () {
-        /* this.signUpLoading = true
-        this.$root.$data.feathers.service('users').create({
+        this.signUpLoading = true
+        this.$root.$data.feathers.service('solvers').create({
           name: this.form.name,
           email: this.form.email,
           password: this.form.password
@@ -66,7 +66,7 @@
               showClose: true
             })
           }
-        }) */
+        })
       }
     }
   }
