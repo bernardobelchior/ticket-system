@@ -32,6 +32,7 @@
         this.loginLoading = true
         this.$root.$data.feathers.authenticate({
           strategy: 'local',
+          entity: 'user',
           email: this.form.email,
           password: this.form.password
         }).then(() => {

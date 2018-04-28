@@ -29,15 +29,19 @@ export default {
   },
   methods: {
     submit: function () {
-      /* this.loginLoading = true
-        this.$root.$data.feathers.authenticate({
+      this.loginLoading = true
+      this.$root.$data.feathers
+        .authenticate({
           strategy: 'local',
+          entity: 'solver',
           email: this.form.email,
           password: this.form.password
-        }).then(() => {
+        })
+        .then(() => {
           this.loginLoading = false
-          this.$router.push('/tickets/create')
-        }).catch(e => {
+          this.$router.push('/')
+        })
+        .catch(e => {
           this.loginLoading = false
           console.error(e)
 
@@ -46,7 +50,7 @@ export default {
             message: 'Login failed',
             showClose: true
           })
-        }) */
+        })
     }
   }
 }
