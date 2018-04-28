@@ -2,7 +2,7 @@
   <div id="app">
     <el-menu default-active="/" router mode="horizontal" text-color="white" background-color="#35495E"
              active-text-color="white">
-      <el-menu-item v-for="route in routes" :index="route.path">{{route.label}}</el-menu-item>
+      <el-menu-item v-for="route in routes" :key="route.label" :index="route.path">{{route.label}}</el-menu-item>
     </el-menu>
     <main>
       <router-view></router-view>
