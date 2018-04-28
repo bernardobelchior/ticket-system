@@ -5,6 +5,7 @@ import SignUp from '@/components/SignUp'
 import Login from '@/components/Login'
 import Logout from '@/components/Logout'
 import ShowTickets from '@/components/tickets/ShowAll'
+import ShowTicket from '@/components/tickets/Show'
 
 Vue.use(Router)
 
@@ -37,6 +38,15 @@ export default new Router({
       component: ShowTickets,
       meta: {
         requiresAuth: true
+      }
+    },
+    {
+      path: '/tickets/show/:id',
+      label: 'Show Ticket',
+      component: ShowTicket,
+      meta: {
+        requiresAuth: true,
+        showOnNavbar: false
       }
     },
     {
