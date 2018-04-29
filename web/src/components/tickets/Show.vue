@@ -7,7 +7,15 @@
                    :value="state.value"></el-option>
       </el-select>
     </el-row>
-    <vue-markdown style="min-height: 120px;" :source="form.description"></vue-markdown>
+    <div>
+      <h2>Description</h2>
+      <vue-markdown style="min-height: 120px;" :source="form.description"></vue-markdown>
+      <div v-if="form.answer">
+        <div class="divider"></div>
+        <h2>Answer</h2>
+        <vue-markdown style="min-height: 120px;" :source="form.answer"></vue-markdown>
+      </div>
+    </div>
   </el-card>
 </template>
 
@@ -24,7 +32,8 @@
         form: {
           title: '',
           description: '',
-          state: 'unassigned'
+          state: 'unassigned',
+          answer: null
         },
         possibleStates: [
           {
@@ -59,5 +68,10 @@
   .show-card {
     max-width: 800px;
     margin: auto;
+  }
+
+  .divider {
+    width: 100%;
+    border-bottom: 1px solid #d0d0d0;
   }
 </style>
