@@ -19,6 +19,8 @@ const authentication = require('./authentication')
 
 const sequelize = require('./sequelize')
 
+const rsmq = require('./messageQueues')
+
 const app = express(feathers())
 
 // Load app configuration
@@ -52,5 +54,7 @@ app.use(express.notFound())
 app.use(express.errorHandler({logger}))
 
 app.hooks(appHooks)
+
+app.set('rsmq', rsmq)
 
 module.exports = app
