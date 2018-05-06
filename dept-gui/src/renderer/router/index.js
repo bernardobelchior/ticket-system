@@ -4,8 +4,8 @@ import LandingPage from '@/components/LandingPage'
 import SignUp from '@/components/SignUp'
 import Login from '@/components/Login'
 import Logout from '@/components/Logout'
-import ShowTickets from '@/components/tickets/ShowAll'
-import ShowTicket from '@/components/tickets/Show'
+import ShowSecondaryQuestions from '@/components/secondary-questions/ShowAll'
+import ShowSecondaryQuestion from '@/components/secondary-questions/Show'
 
 Vue.use(Router)
 
@@ -33,17 +33,17 @@ export default new Router({
       }
     },
     {
-      path: '/tickets/show',
-      label: 'Show Tickets',
-      component: ShowTickets,
+      path: '/secondary-questions/show',
+      label: 'Show Secondary Questions',
+      component: ShowSecondaryQuestions,
       meta: {
         requiresAuth: true
       }
     },
     {
-      path: '/tickets/show/:id',
-      label: 'Show Ticket',
-      component: ShowTicket,
+      path: '/secondary-questions/show/:id',
+      label: 'Show Secondary Questions',
+      component: ShowSecondaryQuestion,
       meta: {
         requiresAuth: true,
         showOnNavbar: false
