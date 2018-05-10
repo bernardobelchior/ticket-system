@@ -30,6 +30,8 @@
         </el-tabs>
         <el-button :loading="answerLoading" type="primary" @click="answerTicket" style="margin-top: 15px">Answer
         </el-button>
+        <el-button :loading="answerSendingOtherDept" type="primary" @click="sendTicketOtherDept" style="margin-top: 15px">Send to Other Dept
+        </el-button>
       </el-form>
 
     </div>
@@ -72,7 +74,8 @@
           }
         ],
         assignLoading: false,
-        answerLoading: false
+        answerLoading: false,
+        answerSendingOtherDept: false,
       }
     },
     mounted: function () {
@@ -128,6 +131,9 @@
             showClose: true
           })
         })
+      },
+      sendTicketOtherDept: function () {
+        // IMPLEMENT
       }
     }
   }
