@@ -19,7 +19,9 @@ module.exports = function (app) {
     },
     state: {
       type: DataTypes.ENUM,
-      values: ['unassigned', 'assigned', 'waiting_for_answers', 'solved']
+      values: ['waiting_for_answers', 'solved'],
+      defaultValue: 'waiting_for_answers',
+      allowNull: false
     }
   }, {
     hooks: {
