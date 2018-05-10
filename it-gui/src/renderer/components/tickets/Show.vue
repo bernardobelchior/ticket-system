@@ -30,7 +30,7 @@
         </el-tabs>
         <el-button :loading="answerLoading" type="primary" @click="answerTicket" style="margin-top: 15px">Answer
         </el-button>
-        <el-button :loading="answerSendingOtherDept" type="primary" @click="sendTicketOtherDept" style="margin-top: 15px">Send to Other Dept
+        <el-button v-if="$store.state.loggedInUserId === form.solverId" :loading="sendingOtherDeptLoading" type="primary" @click="sendTicketOtherDept" style="margin-top: 15px">Send to Other Dept
         </el-button>
       </el-form>
 
@@ -75,21 +75,20 @@
         ],
         assignLoading: false,
         answerLoading: false,
-        answerSendingOtherDept: false,
+        sendingOtherDeptLoading: false,
+        ticketId: null
       }
     },
     mounted: function () {
-      const ticketId = this.$route.params.id
-      this.$root.$data.feathers.service('tickets').get(ticketId).then(result => {
+      this.ticketId = this.$route.params.id
+      this.$root.$data.feathers.service('tickets').get(this.ticketId).then(result => {
         this.$set(this, 'form', result)
       })
     },
     methods: {
       assignTicket: function () {
-        const ticketId = this.$route.params.id
-
         this.signUpLoading = true
-        this.$root.$data.feathers.service('tickets').patch(ticketId, {
+        this.$root.$data.feathers.service('tickets').patch(this.ticketId, {
           state: 'assigned'
         }).then(() => {
           this.assignLoading = false
@@ -109,10 +108,8 @@
         })
       },
       answerTicket: function () {
-        const ticketId = this.$route.params.id
-
         this.answerLoading = true
-        this.$root.$data.feathers.service('tickets').patch(ticketId, {
+        this.$root.$data.feathers.service('tickets').patch(this.ticketId, {
           state: 'solved',
           answer: this.form.answer
         }).then(() => {
@@ -133,7 +130,31 @@
         })
       },
       sendTicketOtherDept: function () {
-        // IMPLEMENT
+        this.$root.$data.feathers.service('secondary-questions').create({
+          title: this.form.title,
+          description: this.form.description,
+          state: 'unassigned',
+          ticketId: this.form.id
+        }).then(() => {
+          this.sendingOtherDeptLoading = false
+          this.$message({
+            type: 'success',
+            message: 'Ticket successfully sent to other department!',
+            showClose: true
+          })
+          this.$root.$data.feathers.service('tickets').patch(this.ticketId, {
+            state: 'waiting_for_answers'
+          }).then(() => {
+            this.form.state = 'waiting_for_answers'
+          })
+        }).catch(() => {
+          this.sendingOtherDeptLoading = false
+          this.$message({
+            type: 'error',
+            message: 'Error on sending the ticket to other department. Please try again.',
+            showClose: true
+          })
+        })
       }
     }
   }

@@ -37,9 +37,14 @@ export default {
           email: this.form.email,
           password: this.form.password
         })
-        .then(() => {
+        .then(response => {
           this.loginLoading = false
-          this.$store.commit('login')
+          return this.$root.$data.feathers.passport.verifyJWT(
+            response.accessToken
+          )
+        })
+        .then(payload => {
+          this.$store.commit('login', payload.id)
           this.$router.push('/tickets/create')
         })
         .catch(e => {

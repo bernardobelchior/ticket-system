@@ -6,7 +6,6 @@ import Login from '@/components/Login'
 import Logout from '@/components/Logout'
 import ShowTickets from '@/components/tickets/ShowAll'
 import ShowTicket from '@/components/tickets/Show'
-import ShowSecondaryQuestions from '@/components/secondary-questions/ShowAll'
 
 Vue.use(Router)
 

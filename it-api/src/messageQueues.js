@@ -1,6 +1,7 @@
 const redisMQ = require('rsmq')
 
 module.exports = function (app) {
+
   rsmq = new redisMQ({
     host: "127.0.0.1",
     port: 6379,
@@ -21,17 +22,7 @@ module.exports = function (app) {
       return
     }
     console.log("Active queues: " + queues.join(","))
-	});
-	
-	/*rsmq.sendMessage({qname:"others", message:"Batard"}, function (err, resp) {
-    if (resp) {
-        console.log("Message sent. ID:", resp);
-    }
-});
-
-rsmq.sendMessage({qname:"others", message:"Bernardo gay"}, function (err, resp) {
-	if (resp) {
-			console.log("Message sent. ID:", resp);
-	}
-});*/
+  });
+  
+  return rsmq;
 }

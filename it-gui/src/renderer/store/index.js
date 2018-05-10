@@ -6,7 +6,8 @@ import modules from './modules'
 Vue.use(Vuex)
 
 const state = {
-  loggedIn: !!window.localStorage.getItem('feathers-jwt')
+  loggedIn: !!window.localStorage.getItem('feathers-jwt'),
+  loggedInUserId: null
 }
 
 const getters = {}
@@ -15,9 +16,11 @@ const mutations = {
   logout: function (state) {
     window.localStorage.removeItem('feathers-jwt')
     state.loggedIn = false
+    state.loggedInUserId = null
   },
-  login: function (state) {
+  login: function (state, id) {
     state.loggedIn = true
+    state.loggedInUserId = id
   }
 }
 
