@@ -11,10 +11,14 @@ const notifyOtherDept = async context => {
     ticketId: context.data.ticketId
   }
 
-  rsmq.sendMessage({qname:"others", message: secondaryQuestion}, function (err, resp) {
+  console.log('Going to create')
+
+  rsmq.sendMessage({qname:"others", message: JSON.stringify(secondaryQuestion)}, function (err, resp) {
     if (resp) {
         console.log("Message sent. ID:", resp)
     }
+    console.log(resp)
+    console.log(err)
   })
 }
 
@@ -23,7 +27,7 @@ module.exports = {
     all: [authenticate('jwt')],
     find: [],
     get: [],
-    create: [notifyOtherDept],
+    create: [],
     update: [],
     patch: [],
     remove: []
@@ -33,7 +37,7 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [],
+    create: [notifyOtherDept],
     update: [],
     patch: [],
     remove: []

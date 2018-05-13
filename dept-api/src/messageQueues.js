@@ -15,13 +15,5 @@ module.exports = function (app) {
     console.log("Active queues: " + queues.join(","))
   });
 
-  /*rsmq.popMessage({
-    qname: "others"
-  }, function (err, resp) {
-    if (resp.id) {
-      console.log("Message received.", resp)
-    } else {
-      console.log("No messages for me...")
-    }
-  });*/
+  return rsmq;
 }
