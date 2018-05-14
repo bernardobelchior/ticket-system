@@ -1,3 +1,4 @@
+const axios = require('axios')
 const {
   authenticate
 } = require('@feathersjs/authentication').hooks
@@ -14,20 +15,20 @@ const attachUserId = hook => {
 }
 
 const checkForNewQuestions = context => {
-  popMessage()
+  popMessage(context)
 }
 
-function popMessage() {
+function popMessage(context) {
   rsmq.popMessage({
     qname: 'others'
   }, function (err, resp) {
     if (resp.id) {
       console.log('Message received.', resp)
       let obj = JSON.parse(resp.message)
-      app.service('secondary-questions').create({
+      context.app.service('secondary-questions').create({
         title: obj.title,
         description: obj.description,
-        state: obj.state,
+        state: 'waiting_for_answers',
         ticketId: obj.ticketId,
         userId: 1
       })
@@ -38,9 +39,11 @@ function popMessage() {
   });
 }
 
-//TODO: 
 const sendToIT = hook => {
-  throw new Error('Unimplemented')
+  return axios.patch(`${hook.app.get('it-address')}/secondary-questions/${hook.result.id}`, {
+    answer: hook.result.answer,
+    state: 'solved'
+  })
 }
 
 module.exports = {
@@ -65,7 +68,9 @@ module.exports = {
     get: [],
     create: [],
     update: [],
-    patch: [],
+    patch: [
+      sendToIT
+    ],
     remove: []
   },
 

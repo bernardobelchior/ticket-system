@@ -30,6 +30,16 @@ const attachSolverId = hook => {
   return hook
 }
 
+const expandSecondaryQuestions = hook => {
+  return hook.app.service('secondary-questions').find({
+    query: {
+        ticketId: hook.result.id
+    }
+  }).then(result => {
+    hook.result.secondaryQuestions = result
+  })
+}
+
 module.exports = {
   before: {
     all: [authenticate('jwt')],
@@ -46,7 +56,7 @@ module.exports = {
   after: {
     all: [],
     find: [],
-    get: [],
+    get: [expandSecondaryQuestions],
     create: [],
     update: [],
     patch: [

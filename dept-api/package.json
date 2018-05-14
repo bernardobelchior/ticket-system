@@ -37,6 +37,7 @@
     "@feathersjs/express": "^1.2.2",
     "@feathersjs/feathers": "^3.1.4",
     "@feathersjs/socketio": "^3.2.1",
+    "axios": "^0.18.0",
     "compression": "^1.7.2",
     "cors": "^2.8.4",
     "feathers-hooks-common": "^4.11.1",

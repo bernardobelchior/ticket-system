@@ -11,7 +11,7 @@
     <el-button v-if="form.state === 'unassigned'" type="primary" @click="assignTicket" :loading="assignLoading">Assign
       Ticket to Me
     </el-button>
-    <div v-if="form.state ==='assigned' || form.state === 'solved'">
+    <div v-if="form.state ==='assigned' || form.state === 'solved' || form.state === 'waiting_for_answers'">
       <div class="divider"></div>
       <h3>Answer</h3>
 
@@ -19,7 +19,7 @@
         <vue-markdown class="preview" :source="form.answer"></vue-markdown>
       </div>
 
-      <el-form v-if="form.state === 'assigned'" :model="form" class="form">
+      <el-form v-if="form.state === 'assigned' || form.state === 'waiting_for_answers'" :model="form" class="form">
         <el-tabs type="card">
           <el-tab-pane label="Text">
             <el-input type="textarea" v-model="form.answer" :rows="5" placeholder="Description"></el-input>
@@ -30,9 +30,23 @@
         </el-tabs>
         <el-button :loading="answerLoading" type="primary" @click="answerTicket" style="margin-top: 15px">Answer
         </el-button>
-        <el-button v-if="$store.state.loggedInUserId === form.solverId" :loading="sendingOtherDeptLoading" type="primary" @click="sendTicketOtherDept" style="margin-top: 15px">Send to Other Dept
-        </el-button>
+        <span v-if="$store.state.loggedInUserId === form.solverId">
+        <span>or</span>
+        <el-select v-model="deptId" placeholder="Select Department">
+          <el-option
+            v-for="item in $store.state.depts"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <el-button :loading="sendingOtherDeptLoading" type="primary" @click="sendTicketOtherDept" style="margin-top: 15px">Send</el-button>
+        </span>
       </el-form>
+
+      <el-card v-for="question in form.secondaryQuestions.data.filter(question => question.answer !== null)">
+        <span>{{question.answer}}</span>
+      </el-card>
 
     </div>
   </el-card>
@@ -52,7 +66,12 @@
           title: '',
           description: '',
           state: 'unassigned',
-          answer: ''
+          answer: '',
+          solverId: null,
+          secondaryQuestions: {
+            total: 1,
+            data: []
+          }
         },
         preview: false,
         buttonText: 'Preview',
@@ -76,12 +95,14 @@
         assignLoading: false,
         answerLoading: false,
         sendingOtherDeptLoading: false,
-        ticketId: null
+        ticketId: null,
+        deptId: null
       }
     },
     mounted: function () {
       this.ticketId = this.$route.params.id
       this.$root.$data.feathers.service('tickets').get(this.ticketId).then(result => {
+        result.answer = ''
         this.$set(this, 'form', result)
       })
     },
@@ -98,6 +119,7 @@
             showClose: true
           })
           this.form.state = 'assigned'
+          this.form.solverId = this.$store.state.loggedInUserId
         }).catch(() => {
           this.assignLoading = false
           this.$message({
@@ -134,7 +156,8 @@
           title: this.form.title,
           description: this.form.description,
           state: 'unassigned',
-          ticketId: this.form.id
+          ticketId: this.form.id,
+          departmentId: this.deptId
         }).then(() => {
           this.sendingOtherDeptLoading = false
           this.$message({

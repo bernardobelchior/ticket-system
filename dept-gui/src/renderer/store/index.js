@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import jwt from 'jsonwebtoken'
 
 import modules from './modules'
 
@@ -7,7 +8,7 @@ Vue.use(Vuex)
 
 const state = {
   loggedIn: !!window.localStorage.getItem('feathers-jwt'),
-  loggedInUserId: null
+  loggedInUserId: jwt.decode(window.localStorage.getItem('feathers-jwt'), {complete: true}).payload.userId
 }
 
 const getters = {}
