@@ -59,7 +59,10 @@ export default new Router({
     },
     {
       path: '*',
-      redirect: '/'
+      redirect: '/',
+      meta: {
+        showOnNavbar: false
+      }
     }
   ]
 })

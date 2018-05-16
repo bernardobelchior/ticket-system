@@ -11,6 +11,9 @@
     <el-button v-if="form.state === 'unassigned'" type="primary" @click="assignTicket" :loading="assignLoading">Assign
       Ticket to Me
     </el-button>
+    <el-card v-for="question in form.secondaryQuestions.data.filter(question => question.answer !== null)">
+      <span>{{question.answer}}</span>
+    </el-card>
     <div v-if="form.state ==='assigned' || form.state === 'solved' || form.state === 'waiting_for_answers'">
       <div class="divider"></div>
       <h3>Answer</h3>
@@ -44,9 +47,6 @@
         </span>
       </el-form>
 
-      <el-card v-for="question in form.secondaryQuestions.data.filter(question => question.answer !== null)">
-        <span>{{question.answer}}</span>
-      </el-card>
 
     </div>
   </el-card>
@@ -69,7 +69,7 @@
           answer: '',
           solverId: null,
           secondaryQuestions: {
-            total: 1,
+            total: 0,
             data: []
           }
         },

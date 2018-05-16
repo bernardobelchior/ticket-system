@@ -22,6 +22,10 @@ module.exports = function (app) {
       values: ['waiting_for_answers', 'solved'],
       defaultValue: 'waiting_for_answers',
       allowNull: false
+    },
+    originalId: { // Id from the IT API db
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   }, {
     hooks: {

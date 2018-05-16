@@ -5,6 +5,7 @@ const {
 const {
   iff
 } = require('feathers-hooks-common')
+const serverToken = '3DF1A7FF-F69D-9545-7EE1-43CE710EA0F1'
 
 const isState = state => hook => {
   return hook.data.state === state
@@ -30,9 +31,10 @@ function popMessage(context) {
         description: obj.description,
         state: 'waiting_for_answers',
         ticketId: obj.ticketId,
-        userId: 1
+        userId: 1,
+        originalId: obj.originalId
       })
-      popMessage()
+      popMessage(context)
     } else {
       console.log('No messages for me...')
     }
@@ -40,10 +42,13 @@ function popMessage(context) {
 }
 
 const sendToIT = hook => {
-  return axios.patch(`${hook.app.get('it-address')}/secondary-questions/${hook.result.id}`, {
+  console.log(hook.result)
+  console.log('boas')
+  return axios.patch(`${hook.app.get('it-address')}/secondary-questions/${hook.result.originalId}`, {
     answer: hook.result.answer,
-    state: 'solved'
-  })
+    state: 'solved',
+    token: serverToken
+  }).then(() => hook)
 }
 
 module.exports = {
@@ -69,7 +74,10 @@ module.exports = {
     create: [],
     update: [],
     patch: [
-      sendToIT
+      iff(
+        isState('solved'),
+        sendToIT
+      )
     ],
     remove: []
   },
@@ -80,12 +88,7 @@ module.exports = {
     get: [],
     create: [],
     update: [],
-    patch: [
-      iff(
-        isState('solved'),
-        sendToIT
-      )
-    ],
+    patch: [],
     remove: []
   }
 }

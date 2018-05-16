@@ -1,14 +1,16 @@
 const {authenticate} = require('@feathersjs/authentication').hooks
+const {unless} = require('feathers-hooks-common')
 
 const notifyOtherDept = async context => {
 
   let rsmq = context.app.get('rsmq')
 
   let secondaryQuestion = {
-    title: context.data.title,
-    description: context.data.description,
-    state: context.data.state,
-    ticketId: context.data.ticketId
+    originalId: context.result.id,
+    title: context.result.title,
+    description: context.result.description,
+    state: context.result.state,
+    ticketId: context.result.ticketId
   }
 
   console.log('Going to create')
@@ -22,10 +24,19 @@ const notifyOtherDept = async context => {
   })
 }
 
+const serverToken = '3DF1A7FF-F69D-9545-7EE1-43CE710EA0F1'
+
+const verifyServerToken = context => {
+  return context.data && context.data.token === serverToken 
+}
+
 module.exports = {
   before: {
     all: [
-      authenticate('jwt')
+      unless(
+        verifyServerToken,
+        authenticate('jwt')
+      )
     ],
     find: [],
     get: [],
