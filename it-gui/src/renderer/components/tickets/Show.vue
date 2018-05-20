@@ -11,9 +11,15 @@
     <el-button v-if="form.state === 'unassigned'" type="primary" @click="assignTicket" :loading="assignLoading">Assign
       Ticket to Me
     </el-button>
-    <el-card v-for="question in form.secondaryQuestions.data.filter(question => question.answer !== null)">
-      <span>{{question.answer}}</span>
-    </el-card>
+    <div v-if="form.secondaryQuestions.data.length !== 0">
+      <div class="divider"></div>
+      <h3>Secondary Questions Answers</h3>
+      <span v-for="(question, index) in form.secondaryQuestions.data.filter(question => question.answer !== null)" :key="question.answer">
+          <el-row>
+            <p>{{index + 1}}. {{question.answer}}</p>
+          </el-row>
+      </span>
+    </div>
     <div v-if="form.state ==='assigned' || form.state === 'solved' || form.state === 'waiting_for_answers'">
       <div class="divider"></div>
       <h3>Answer</h3>
@@ -102,7 +108,9 @@
     mounted: function () {
       this.ticketId = this.$route.params.id
       this.$root.$data.feathers.service('tickets').get(this.ticketId).then(result => {
-        result.answer = ''
+        if (result.answer === null) {
+          result.answer = ''
+        }
         this.$set(this, 'form', result)
       })
     },
