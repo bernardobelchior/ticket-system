@@ -35,12 +35,17 @@
     methods: {
       showSecondaryQuestions: function (questionId) {
         this.$router.push('/secondary-questions/show/' + questionId)
+      },
+      getSecondaryQuestions: function () {
+        console.log('pooling')
+        this.$root.$data.feathers.service('secondary-questions').find().then(results => {
+          this.$set(this, 'questions', results.data)
+        })
       }
     },
     mounted: function () {
-      this.$root.$data.feathers.service('secondary-questions').find().then(results => {
-        this.$set(this, 'questions', results.data)
-      })
+      // setting secondary questions pooling
+      setInterval(this.getSecondaryQuestions, 3000)
     }
   }
 </script>

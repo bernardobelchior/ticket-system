@@ -15,11 +15,14 @@ const attachUserId = hook => {
   hook.data.userId = hook.params.payload.userId
 }
 
-const checkForNewQuestions = context => {
-  popMessage(context)
+const checkForNewQuestions = async context => {
+
+  let user = (await context.app.service('users').find()).data[0]
+
+  popMessage(context, user.id)
 }
 
-function popMessage(context) {
+function popMessage(context, userId) {
   rsmq.popMessage({
     qname: 'others'
   }, function (err, resp) {
@@ -31,10 +34,11 @@ function popMessage(context) {
         description: obj.description,
         state: 'waiting_for_answers',
         ticketId: obj.ticketId,
-        userId: 1,
+        userId: userId,
         originalId: obj.originalId
+      }).then(() => {
+        popMessage(context, userId)
       })
-      popMessage(context)
     } else {
       console.log('No messages for me...')
     }
@@ -42,8 +46,6 @@ function popMessage(context) {
 }
 
 const sendToIT = hook => {
-  console.log(hook.result)
-  console.log('boas')
   return axios.patch(`${hook.app.get('it-address')}/secondary-questions/${hook.result.originalId}`, {
     answer: hook.result.answer,
     state: 'solved',

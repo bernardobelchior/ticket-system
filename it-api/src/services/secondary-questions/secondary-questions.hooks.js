@@ -13,14 +13,14 @@ const notifyOtherDept = async context => {
     ticketId: context.result.ticketId
   }
 
-  console.log('Going to create')
-
   rsmq.sendMessage({qname:"others", message: JSON.stringify(secondaryQuestion)}, function (err, resp) {
     if (resp) {
         console.log("Message sent. ID:", resp)
+        console.log(resp)
     }
-    console.log(resp)
-    console.log(err)
+    else {
+      console.log(err)
+    }
   })
 }
 

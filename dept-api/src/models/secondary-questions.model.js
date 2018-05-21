@@ -36,7 +36,7 @@ module.exports = function (app) {
   })
 
   secondaryQuestions.associate = function (models) {
-    secondaryQuestions.belongsTo(models.users, {foreignKey: {allowNull: false}})
+    secondaryQuestions.belongsTo(models.users, {foreignKey: {allowNull: true}})
   }
 
   return secondaryQuestions
