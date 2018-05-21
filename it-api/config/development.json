@@ -1,0 +1,3 @@
+{
+  "postgres": "postgres://postgres:postgres@database:5432/it_api"
+}

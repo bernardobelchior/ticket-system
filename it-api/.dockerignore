@@ -1,0 +1,7 @@
+node_modules/
+test/
+
+.editorconfig
+*.iml
+README.md
+*.env
