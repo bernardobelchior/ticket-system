@@ -58,8 +58,8 @@ const sendToIT = hook => {
 
 const connectToRedis = async context => {
   let rsmq = context.app.get('rsmq')
-
-  if (!rsmq.redis.connected) {
+  
+  /*if (!rsmq.redis.connected) {
     const redisMQ = require('rsmq')
     rsmq = new redisMQ({
       host: "127.0.0.1",
@@ -74,14 +74,14 @@ const connectToRedis = async context => {
         console.log("queue created")
       }
     });
-  }
+  }*/
 }
 
 module.exports = {
   before: {
-    all: [authenticate('jwt'), connectToRedis, checkForNewQuestions],
-    find: [checkForNewQuestions],
-    get: [checkForNewQuestions],
+    all: [authenticate('jwt'), connectToRedis],
+    find: [],
+    get: [],
     create: [],
     update: [],
     patch: [

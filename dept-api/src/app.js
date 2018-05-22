@@ -21,8 +21,6 @@ const sequelize = require('./sequelize')
 
 const app = express(feathers())
 
-const rsmq = require('./messageQueues')(app)
-
 // Load app configuration
 app.configure(configuration())
 // Enable CORS, security, compression, favicon and body parsing
@@ -54,6 +52,8 @@ app.use(express.notFound())
 app.use(express.errorHandler({logger}))
 
 app.hooks(appHooks)
+
+const rsmq = require('./messageQueues')(app)
 
 app.set('rsmq', rsmq)
 
