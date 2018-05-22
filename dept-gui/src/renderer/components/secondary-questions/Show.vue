@@ -58,7 +58,7 @@
         possibleStates: [
           {
             value: 'waiting_for_answers',
-            label: 'Waiting for answers'
+            label: 'Waiting for answer'
           }, {
             value: 'solved',
             label: 'Solved'

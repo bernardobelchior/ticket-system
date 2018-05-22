@@ -1,12 +1,11 @@
 <template>
   <el-card class="show-card">
     <el-table :data="questions" style="width: 100%">
-      <el-table-column prop="title" label="Title">
+      <el-table-column label="Date" prop="date" :formatter="formatDate" sortable>
       </el-table-column>
-      <el-table-column label="State" width="250">
-        <template slot-scope="scope">
-          <span>{{possibleStates[scope.row.state]}}</span>
-        </template>
+      <el-table-column prop="title" label="Title" sortable>
+      </el-table-column>
+      <el-table-column label="State" prop="state" width="250" sortable :formatter="formatState">
       </el-table-column>
 
       <el-table-column label="Show" width="100">
@@ -27,7 +26,7 @@
         possibleStates: {
           'unassigned': 'Unassigned',
           'assigned': 'Assigned',
-          'waiting_for_answers': 'Waiting for answers',
+          'waiting_for_answers': 'Waiting for answer',
           'solved': 'Solved'
         }
       }
@@ -41,6 +40,12 @@
         this.$root.$data.feathers.service('secondary-questions').find().then(results => {
           this.$set(this, 'questions', results.data)
         })
+      },
+      formatDate: function (row) {
+        return new Date(row.createdAt).toLocaleString()
+      },
+      formatState: function (row) {
+        return this.possibleStates[row.state]
       }
     },
     mounted: function () {
