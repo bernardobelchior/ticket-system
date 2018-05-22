@@ -16,12 +16,14 @@
     <el-button v-if="form.state === 'unassigned'" type="primary" @click="assignTicket" :loading="assignLoading">Assign Ticket to Me</el-button>
     <div v-if="form.secondaryQuestions.data.length !== 0">
       <div class="divider"></div>
-      <div v-for="(question, index) in form.secondaryQuestions.data.filter(question => question.answer !== null)" :key="question.id">
+      <div v-for="(question, index) in form.secondaryQuestions.data" :key="question.id">
         <h3 style="margin-bottom: 0;">{{question.title}}</h3>
         <vue-markdown :source="question.description"></vue-markdown>
         <div style="height: 20px"></div>
-        <vue-markdown class="secondary-answer" :source="question.answer"></vue-markdown>
-        <div style="margin: 5px 0;" class="divider"></div>
+        <div v-if="question.answer !== null">
+          <vue-markdown class="secondary-answer" :source="question.answer"></vue-markdown>
+          <div style="margin: 5px 0;" class="divider"></div>
+        </div>
       </div>
     </div>
     <div v-if="form.state ==='assigned' || form.state === 'solved' || form.state === 'waiting_for_answers'">
@@ -63,6 +65,7 @@
 </template>
 
 <script>
+import assign from 'lodash.assign'
 import VueMarkdown from 'vue-markdown'
 
 export default {
@@ -126,8 +129,25 @@ export default {
 
       this.$set(this, 'form', result)
     })
+
+    this.$root.$data.feathers.service('tickets').on('patched', this.ticketUpdate)
+    this.$root.$data.feathers.service('secondary-questions').on('created', this.questionUpdate)
+    this.$root.$data.feathers.service('secondary-questions').on('patched', this.questionUpdate)
   },
   methods: {
+    ticketUpdate: function (newTicket) {
+      assign(this.form, newTicket)
+    },
+    questionUpdate: function (newQuestion) {
+      const questions = this.form.secondaryQuestions.data.filter(question => question.id === newQuestion.id)
+
+      if (questions.length === 0) {
+        this.form.secondaryQuestions.data.push(newQuestion)
+        this.form.secondaryQuestions.total++
+      } else {
+        assign(questions[0], newQuestion)
+      }
+    },
     assignTicket: function () {
       this.signUpLoading = true
       this.$root.$data.feathers.service('tickets').patch(this.ticketId, {

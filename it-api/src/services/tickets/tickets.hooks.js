@@ -1,5 +1,6 @@
 const {authenticate} = require('@feathersjs/authentication').hooks
-const {iff} = require('feathers-hooks-common')
+const {iff, unless} = require('feathers-hooks-common')
+const {verifyServerToken} = require('../common-hooks.js')
 const mailer = require('../../mailer')
 
 const sendTicketAnsweredMail = async hook => {
@@ -61,7 +62,10 @@ module.exports = {
     create: [attachUserId],
     update: [],
     patch: [
-      attachSolverId
+      unless(
+        verifyServerToken,
+        attachSolverId
+      )
     ],
     remove: []
   },

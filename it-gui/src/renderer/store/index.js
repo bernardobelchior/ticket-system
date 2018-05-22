@@ -25,9 +25,9 @@ const mutations = {
     state.loggedIn = false
     state.loggedInUserId = null
   },
-  login: function (state, id) {
+  login: function (state, accessToken) {
     state.loggedIn = true
-    state.loggedInUserId = id
+    state.loggedInUserId = jwt.decode(accessToken).id
   }
 }
 

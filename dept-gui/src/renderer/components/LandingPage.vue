@@ -11,12 +11,7 @@
 
 <script>
 export default {
-  name: 'landing-page',
-  methods: {
-    open (link) {
-      this.$electron.shell.openExternal(link)
-    }
-  }
+  name: 'landing-page'
 }
 </script>
 

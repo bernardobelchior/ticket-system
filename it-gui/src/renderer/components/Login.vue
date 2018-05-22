@@ -39,12 +39,7 @@ export default {
         })
         .then(response => {
           this.loginLoading = false
-          return this.$root.$data.feathers.passport.verifyJWT(
-            response.accessToken
-          )
-        })
-        .then(payload => {
-          this.$store.commit('login', payload.id)
+          this.$store.commit('login', response.accessToken)
           this.$router.push('/tickets/create')
         })
         .catch(e => {

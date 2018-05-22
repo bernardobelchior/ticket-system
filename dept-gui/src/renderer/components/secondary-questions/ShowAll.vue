@@ -35,12 +35,6 @@
       showSecondaryQuestions: function (questionId) {
         this.$router.push('/secondary-questions/show/' + questionId)
       },
-      getSecondaryQuestions: function () {
-        console.log('pooling')
-        this.$root.$data.feathers.service('secondary-questions').find().then(results => {
-          this.$set(this, 'questions', results.data)
-        })
-      },
       formatDate: function (row) {
         return new Date(row.createdAt).toLocaleString()
       },
@@ -49,8 +43,15 @@
       }
     },
     mounted: function () {
-      // setting secondary questions pooling
-      setInterval(this.getSecondaryQuestions, 3000)
+      this.$root.$data.feathers.service('secondary-questions').find().then(results => {
+        this.$set(this, 'questions', results.data)
+      })
+      this.$root.$data.feathers.service('secondary-questions').on('created', question => {
+        this.questions.push(question)
+      })
+    },
+    beforeDestroy: function () {
+      this.$root.$data.feathers.service('secondary-questions').off('created')
     }
   }
 </script>

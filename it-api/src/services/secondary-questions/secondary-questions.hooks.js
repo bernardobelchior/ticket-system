@@ -1,5 +1,6 @@
 const {authenticate} = require('@feathersjs/authentication').hooks
 const {unless} = require('feathers-hooks-common')
+const {verifyServerToken} = require('../common-hooks.js')
 
 const notifyOtherDept = async context => {
   return context.app.service('tickets').get(context.result.ticketId).then(ticket => {
@@ -30,10 +31,25 @@ const notifyOtherDept = async context => {
   })
 }
 
-const serverToken = '3DF1A7FF-F69D-9545-7EE1-43CE710EA0F1'
-
-const verifyServerToken = context => {
-  return context.data && context.data.token === serverToken 
+const updateTicketState = context => {
+  return context.app.service('secondary-questions').find({
+    query: {
+      ticketId: context.result.ticketId
+    }
+  }).then(results => {
+    console.log(results)
+    console.log(results.data.filter(question => question.state !== 'solved'))
+    if (results.data.filter(question => question.state !== 'solved').length === 0) {
+      return context.app.service('tickets').patch(context.result.ticketId, {
+        state: 'assigned',
+        token: context.data.token
+      }).then(() => {
+        return context 
+      })
+    } else {
+      return context
+    }
+  })
 }
 
 module.exports = {
@@ -59,7 +75,7 @@ module.exports = {
     get: [],
     create: [notifyOtherDept],
     update: [],
-    patch: [],
+    patch: [updateTicketState],
     remove: []
   },
 
