@@ -27,12 +27,9 @@ function popMessage(context) {
       console.log('Message received.', resp)
       let obj = JSON.parse(resp.message)
       context.app.service('secondary-questions').create({
-        title: obj.title,
-        description: obj.description,
+        ...obj,
         state: 'waiting_for_answers',
-        ticketId: obj.ticketId,
         userId: 1,
-        originalId: obj.originalId
       })
       popMessage(context)
     } else {

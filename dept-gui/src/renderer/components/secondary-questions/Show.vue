@@ -1,14 +1,18 @@
 <template>
   <el-card class="show-card">
     <el-row slot="header" type="flex" justify="space-between">
-      <h2 style="margin:10px 0 0 0">{{form.title}}</h2>
+      <h2 style="margin:10px 0 0 0">{{form.ticketTitle}}</h2>
       <el-select v-model="form.state" disabled>
         <el-option v-for="state in possibleStates" :key="state.value" :label="state.label"
                    :value="state.value"></el-option>
       </el-select>
     </el-row>
-    <vue-markdown style="min-height: 120px;" :source="form.description"></vue-markdown>
+    <vue-markdown style="min-height: 120px;" :source="form.ticketDescription"></vue-markdown>
     <div>
+      <div class="divider"></div>
+      <h2 class="question-title">{{form.title}}</h2>
+      <span class="creator-name">{{form.creatorName}}</span>
+      <vue-markdown class="preview" :source="form.description"></vue-markdown>
       <div class="divider"></div>
       <h3>Answer</h3>
 
@@ -46,7 +50,8 @@
           title: '',
           description: '',
           state: 'waiting_for_answers',
-          answer: ''
+          answer: '',
+          creatorName: ''
         },
         preview: false,
         buttonText: 'Preview',
@@ -118,5 +123,14 @@
   .divider {
     width: 100%;
     border-bottom: 1px solid #d0d0d0;
+  }
+
+  .creator-name {
+    color: grey;
+    font-size: 75%;
+  }
+
+  .question-title {
+    margin-bottom: 2px;
   }
 </style>

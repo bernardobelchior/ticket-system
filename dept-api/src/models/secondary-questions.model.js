@@ -14,6 +14,18 @@ module.exports = function (app) {
       type: DataTypes.TEXT,
       allowNull: false
     },
+    ticketTitle: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    ticketDescription: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    creatorName: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
     answer: {
       type: DataTypes.TEXT
     },

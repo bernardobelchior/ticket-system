@@ -3,25 +3,22 @@
     <el-row slot="header" type="flex" justify="space-between">
       <h2 style="margin:10px 0 0 0">{{form.title}}</h2>
       <el-select v-model="form.state" disabled>
-        <el-option v-for="state in possibleStates" :key="state.value" :label="state.label"
-                   :value="state.value"></el-option>
+        <el-option v-for="state in possibleStates" :key="state.value" :label="state.label" :value="state.value"></el-option>
       </el-select>
     </el-row>
     <vue-markdown style="min-height: 120px;" :source="form.description"></vue-markdown>
-    <el-button v-if="form.state === 'unassigned'" type="primary" @click="assignTicket" :loading="assignLoading">Assign
-      Ticket to Me
-    </el-button>
+    <el-button v-if="form.state === 'unassigned'" type="primary" @click="assignTicket" :loading="assignLoading">Assign Ticket to Me</el-button>
     <div v-if="form.secondaryQuestions.data.length !== 0">
       <div class="divider"></div>
-      <h3>Secondary Questions Answers</h3>
-      <span v-for="(question, index) in form.secondaryQuestions.data.filter(question => question.answer !== null)" :key="question.answer">
-          <el-row>
-            <p>{{index + 1}}. {{question.answer}}</p>
-          </el-row>
-      </span>
+      <div v-for="(question, index) in form.secondaryQuestions.data.filter(question => question.answer !== null)" :key="question.id">
+        <h3 style="margin-bottom: 0;">{{question.title}}</h3>
+        <vue-markdown :source="question.description"></vue-markdown>
+        <div style="height: 20px"></div>
+        <vue-markdown class="secondary-answer" :source="question.answer"></vue-markdown>
+        <div style="margin: 5px 0;" class="divider"></div>
+      </div>
     </div>
     <div v-if="form.state ==='assigned' || form.state === 'solved' || form.state === 'waiting_for_answers'">
-      <div class="divider"></div>
       <h3>Answer</h3>
 
       <div v-if="form.state === 'solved'">
@@ -29,6 +26,9 @@
       </div>
 
       <el-form v-if="form.state === 'assigned' || form.state === 'waiting_for_answers'" :model="form" class="form">
+        <el-form-item label="Title:" label-width="40px">
+          <el-input v-model="form.questionTitle" :rows="5" placeholder="Title"></el-input>
+        </el-form-item>
         <el-tabs type="card">
           <el-tab-pane label="Text">
             <el-input type="textarea" v-model="form.answer" :rows="5" placeholder="Description"></el-input>
@@ -40,172 +40,178 @@
         <el-button :loading="answerLoading" type="primary" @click="answerTicket" style="margin-top: 15px">Answer
         </el-button>
         <span v-if="$store.state.loggedInUserId === form.solverId">
-        <span>or</span>
-        <el-select v-model="deptId" placeholder="Select Department">
-          <el-option
-            v-for="item in $store.state.depts"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        <el-button :loading="sendingOtherDeptLoading" type="primary" @click="sendTicketOtherDept" style="margin-top: 15px">Send</el-button>
+          <span>or</span>
+          <el-select v-model="deptId" placeholder="Select Department">
+            <el-option
+              v-for="item in $store.state.depts"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          <el-button :loading="sendingOtherDeptLoading" type="primary" @click="sendTicketOtherDept" style="margin-top: 15px">Send</el-button>
         </span>
       </el-form>
-
-
     </div>
   </el-card>
 </template>
 
 <script>
-  import VueMarkdown from 'vue-markdown'
+import VueMarkdown from 'vue-markdown'
 
-  export default {
-    name: 'show-ticket',
-    components: {
-      VueMarkdown
-    },
-    data () {
-      return {
-        form: {
-          title: '',
-          description: '',
-          state: 'unassigned',
-          answer: '',
-          solverId: null,
-          secondaryQuestions: {
-            total: 0,
-            data: []
-          }
-        },
-        preview: false,
-        buttonText: 'Preview',
-        possibleStates: [
-          {
-            value: 'unassigned',
-            label: 'Unassigned'
-          },
-          {
-            value: 'assigned',
-            label: 'Assigned'
-          },
-          {
-            value: 'waiting_for_answers',
-            label: 'Waiting for answers'
-          }, {
-            value: 'solved',
-            label: 'Solved'
-          }
-        ],
-        assignLoading: false,
-        answerLoading: false,
-        sendingOtherDeptLoading: false,
-        ticketId: null,
-        deptId: null
-      }
-    },
-    mounted: function () {
-      this.ticketId = this.$route.params.id
-      this.$root.$data.feathers.service('tickets').get(this.ticketId).then(result => {
-        if (result.answer === null) {
-          result.answer = ''
+export default {
+  name: 'show-ticket',
+  components: {
+    VueMarkdown
+  },
+  data () {
+    return {
+      form: {
+        title: '',
+        description: '',
+        state: 'unassigned',
+        answer: '',
+        solverId: null,
+        questionTitle: '',
+        secondaryQuestions: {
+          total: 0,
+          data: []
         }
-        this.$set(this, 'form', result)
+      },
+      preview: false,
+      buttonText: 'Preview',
+      possibleStates: [
+        {
+          value: 'unassigned',
+          label: 'Unassigned'
+        },
+        {
+          value: 'assigned',
+          label: 'Assigned'
+        },
+        {
+          value: 'waiting_for_answers',
+          label: 'Waiting for answers'
+        }, {
+          value: 'solved',
+          label: 'Solved'
+        }
+      ],
+      assignLoading: false,
+      answerLoading: false,
+      sendingOtherDeptLoading: false,
+      ticketId: null,
+      deptId: null
+    }
+  },
+  mounted: function () {
+    this.ticketId = this.$route.params.id
+    this.$root.$data.feathers.service('tickets').get(this.ticketId).then(result => {
+      if (result.answer === null) {
+        result.answer = ''
+      }
+      this.$set(this, 'form', result)
+    })
+  },
+  methods: {
+    assignTicket: function () {
+      this.signUpLoading = true
+      this.$root.$data.feathers.service('tickets').patch(this.ticketId, {
+        state: 'assigned'
+      }).then(() => {
+        this.assignLoading = false
+        this.$message({
+          type: 'success',
+          message: 'Ticket assigned!',
+          showClose: true
+        })
+        this.form.state = 'assigned'
+        this.form.solverId = this.$store.state.loggedInUserId
+      }).catch(() => {
+        this.assignLoading = false
+        this.$message({
+          type: 'error',
+          message: 'Error!',
+          showClose: true
+        })
       })
     },
-    methods: {
-      assignTicket: function () {
-        this.signUpLoading = true
+    answerTicket: function () {
+      this.answerLoading = true
+      this.$root.$data.feathers.service('tickets').patch(this.ticketId, {
+        state: 'solved',
+        answer: this.form.answer
+      }).then(() => {
+        this.answerLoading = false
+        this.$message({
+          type: 'success',
+          message: 'Ticket answered successfully!',
+          showClose: true
+        })
+        this.form.state = 'solved'
+      }).catch(() => {
+        this.answerLoading = false
+        this.$message({
+          type: 'error',
+          message: 'Error answering ticket. Please try again.',
+          showClose: true
+        })
+      })
+    },
+    sendTicketOtherDept: function () {
+      this.$root.$data.feathers.service('secondary-questions').create({
+        title: this.form.questionTitle,
+        description: this.form.answer,
+        state: 'unassigned',
+        ticketId: this.form.id,
+        departmentId: this.deptId
+      }).then(() => {
+        this.sendingOtherDeptLoading = false
+        this.$message({
+          type: 'success',
+          message: 'Ticket successfully sent to other department!',
+          showClose: true
+        })
         this.$root.$data.feathers.service('tickets').patch(this.ticketId, {
-          state: 'assigned'
+          state: 'waiting_for_answers'
         }).then(() => {
-          this.assignLoading = false
-          this.$message({
-            type: 'success',
-            message: 'Ticket assigned!',
-            showClose: true
-          })
-          this.form.state = 'assigned'
-          this.form.solverId = this.$store.state.loggedInUserId
-        }).catch(() => {
-          this.assignLoading = false
-          this.$message({
-            type: 'error',
-            message: 'Error!',
-            showClose: true
-          })
+          this.form.state = 'waiting_for_answers'
         })
-      },
-      answerTicket: function () {
-        this.answerLoading = true
-        this.$root.$data.feathers.service('tickets').patch(this.ticketId, {
-          state: 'solved',
-          answer: this.form.answer
-        }).then(() => {
-          this.answerLoading = false
-          this.$message({
-            type: 'success',
-            message: 'Ticket answered successfully!',
-            showClose: true
-          })
-          this.form.state = 'solved'
-        }).catch(() => {
-          this.answerLoading = false
-          this.$message({
-            type: 'error',
-            message: 'Error answering ticket. Please try again.',
-            showClose: true
-          })
+      }).catch(() => {
+        this.sendingOtherDeptLoading = false
+        this.$message({
+          type: 'error',
+          message: 'Error on sending the ticket to other department. Please try again.',
+          showClose: true
         })
-      },
-      sendTicketOtherDept: function () {
-        this.$root.$data.feathers.service('secondary-questions').create({
-          title: this.form.title,
-          description: this.form.description,
-          state: 'unassigned',
-          ticketId: this.form.id,
-          departmentId: this.deptId
-        }).then(() => {
-          this.sendingOtherDeptLoading = false
-          this.$message({
-            type: 'success',
-            message: 'Ticket successfully sent to other department!',
-            showClose: true
-          })
-          this.$root.$data.feathers.service('tickets').patch(this.ticketId, {
-            state: 'waiting_for_answers'
-          }).then(() => {
-            this.form.state = 'waiting_for_answers'
-          })
-        }).catch(() => {
-          this.sendingOtherDeptLoading = false
-          this.$message({
-            type: 'error',
-            message: 'Error on sending the ticket to other department. Please try again.',
-            showClose: true
-          })
-        })
-      }
+      })
     }
   }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .show-card {
-    max-width: 800px;
-    margin: auto;
-  }
+.show-card {
+  max-width: 800px;
+  margin: auto;
+}
 
-  .preview {
-    text-align: left;
-    min-height: 120px;
-    min-width: 100%;
-  }
+.preview {
+  text-align: left;
+  min-height: 120px;
+  min-width: 100%;
+}
 
-  .divider {
-    width: 100%;
-    border-bottom: 1px solid #d0d0d0;
-  }
+.divider {
+  width: 100%;
+  border-bottom: 1px solid #d0d0d0;
+}
+
+.secondary-answer {
+  background-color: #F0F0F0; 
+  padding: 2px 0 2px 5px; 
+  border: 1px solid #F0F0F0; 
+  border-radius: 4px;
+}
 </style>

@@ -2,25 +2,29 @@ const {authenticate} = require('@feathersjs/authentication').hooks
 const {unless} = require('feathers-hooks-common')
 
 const notifyOtherDept = async context => {
+  return context.app.service('tickets').get(context.result.ticketId).then(ticket => {
+    return context.app.service('solvers').get(context.params.payload.id).then(solver => {
+      let rsmq = context.app.get('rsmq')
 
-  let rsmq = context.app.get('rsmq')
+      let secondaryQuestion = {
+        originalId: context.result.id,
+        title: context.result.title,
+        description: context.result.description,
+        state: context.result.state,
+        ticketId: context.result.ticketId,
+        ticketTitle: ticket.title,
+        ticketDescription: ticket.description,
+        creatorName: solver.name
+      }
 
-  let secondaryQuestion = {
-    originalId: context.result.id,
-    title: context.result.title,
-    description: context.result.description,
-    state: context.result.state,
-    ticketId: context.result.ticketId
-  }
-
-  console.log('Going to create')
-
-  rsmq.sendMessage({qname:"others", message: JSON.stringify(secondaryQuestion)}, function (err, resp) {
-    if (resp) {
-        console.log("Message sent. ID:", resp)
-    }
-    console.log(resp)
-    console.log(err)
+      rsmq.sendMessage({qname:"others", message: JSON.stringify(secondaryQuestion)}, function (err, resp) {
+        if (resp) {
+          console.log("Message sent. ID:", resp)
+        }
+        console.log(resp)
+        console.log(err)
+      })
+    })
   })
 }
 
