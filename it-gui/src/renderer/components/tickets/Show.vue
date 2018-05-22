@@ -224,7 +224,7 @@ export default {
 
 .secondary-answer {
   background-color: #F0F0F0; 
-  padding: 2px 0 2px 5px; 
+  padding: 2px 0 2px 10px; 
   border: 1px solid #F0F0F0; 
   border-radius: 4px;
 }
