@@ -21,33 +21,6 @@ const attachUserId = hook => {
   hook.data.userId = hook.params.payload.userId
 }
 
-const checkForNewQuestions = async context => {
-
-  let user = (await context.app.service('users').find()).data[0]
-
-  popMessage(context, user.id)
-}
-
-function popMessage(context, userId) {
-  rsmq.popMessage({
-    qname: 'others'
-  }, function (err, resp) {
-    if (resp.id) {
-      console.log('Message received.', resp)
-      let obj = JSON.parse(resp.message)
-      context.app.service('secondary-questions').create({
-        ...obj,
-        state: 'waiting_for_answers',
-        userId: userId,
-      }).then(() => {
-        popMessage(context, userId)
-      })
-    } else {
-      console.log('No messages for me...')
-    }
-  });
-}
-
 const sendToIT = hook => {
   return axios.patch(`${hook.app.get('it-address')}/secondary-questions/${hook.result.originalId}`, {
     answer: hook.result.answer,
@@ -56,30 +29,9 @@ const sendToIT = hook => {
   }).then(() => hook)
 }
 
-const connectToRedis = async context => {
-  let rsmq = context.app.get('rsmq')
-  
-  /*if (!rsmq.redis.connected) {
-    const redisMQ = require('rsmq')
-    rsmq = new redisMQ({
-      host: "127.0.0.1",
-      port: 6379,
-      ns: "rsmq"
-    });
-    
-    rsmq.createQueue({
-      qname: "others"
-    }, function (err, resp) {
-      if (resp === 1) {
-        console.log("queue created")
-      }
-    });
-  }*/
-}
-
 module.exports = {
   before: {
-    all: [authenticate('jwt'), connectToRedis],
+    all: [authenticate('jwt')],
     find: [],
     get: [],
     create: [],

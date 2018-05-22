@@ -53,30 +53,9 @@ const expandSecondaryQuestions = hook => {
   })
 }
 
-const connectToRedis = async context => {
-  let rsmq = context.app.get('rsmq')
-
-  if (!rsmq.redis.connected) {
-    const redisMQ = require('rsmq')
-    rsmq = new redisMQ({
-      host: "127.0.0.1",
-      port: 6379,
-      ns: "rsmq"
-    });
-    
-    rsmq.createQueue({
-      qname: "others"
-    }, function (err, resp) {
-      if (resp === 1) {
-        console.log("queue created")
-      }
-    });
-  }
-}
-
 module.exports = {
   before: {
-    all: [authenticate('jwt'), connectToRedis],
+    all: [authenticate('jwt')],
     find: [],
     get: [],
     create: [attachUserId],
