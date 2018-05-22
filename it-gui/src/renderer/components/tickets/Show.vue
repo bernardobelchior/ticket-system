@@ -1,10 +1,16 @@
 <template>
   <el-card class="show-card">
     <el-row slot="header" type="flex" justify="space-between">
-      <h2 style="margin:10px 0 0 0">{{form.title}}</h2>
+      <el-col> 
+        <h2 style="margin:10px 0 0 0">{{form.title}}</h2>
+        <span class="creator-name">{{form.user.name}} - {{form.user.email}}</span>
+        <span class="creator-name">| {{form.createdAt.toLocaleString()}}</span>
+      </el-col>
       <el-select v-model="form.state" disabled>
         <el-option v-for="state in possibleStates" :key="state.value" :label="state.label" :value="state.value"></el-option>
       </el-select>
+    </el-row>
+    <el-row>
     </el-row>
     <vue-markdown style="min-height: 120px;" :source="form.description"></vue-markdown>
     <el-button v-if="form.state === 'unassigned'" type="primary" @click="assignTicket" :loading="assignLoading">Assign Ticket to Me</el-button>
@@ -73,9 +79,14 @@ export default {
         answer: '',
         solverId: null,
         questionTitle: '',
+        createdAt: new Date(),
         secondaryQuestions: {
           total: 0,
           data: []
+        },
+        user: {
+          name: '',
+          email: ''
         }
       },
       preview: false,
@@ -110,6 +121,9 @@ export default {
       if (result.answer === null) {
         result.answer = ''
       }
+
+      result.createdAt = new Date(result.createdAt)
+
       this.$set(this, 'form', result)
     })
   },
@@ -213,5 +227,10 @@ export default {
   padding: 2px 0 2px 5px; 
   border: 1px solid #F0F0F0; 
   border-radius: 4px;
+}
+
+.creator-name {
+  color: grey;
+  font-size: 75%;
 }
 </style>

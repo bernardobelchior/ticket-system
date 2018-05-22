@@ -30,6 +30,13 @@ const attachSolverId = hook => {
   return hook
 }
 
+const expandUser = hook => {
+  return hook.app.service('users').get(hook.result.userId)
+    .then(user => {
+      hook.result.user = user
+    })
+}
+
 const expandSecondaryQuestions = hook => {
   return hook.app.service('secondary-questions').find({
     query: {
@@ -77,7 +84,7 @@ module.exports = {
   after: {
     all: [],
     find: [],
-    get: [expandSecondaryQuestions],
+    get: [expandSecondaryQuestions, expandUser],
     create: [],
     update: [],
     patch: [
