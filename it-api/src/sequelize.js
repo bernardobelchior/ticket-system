@@ -66,11 +66,15 @@ module.exports = function (app) {
 
     // Sync to the database
     sequelize.sync()
-    
-    // How to verify if exists before create?
-    /*app.service('departments').create({
+      
+    // How to verify if exists before create?    
+    /* app.service('departments').create({
       name: 'IT'
+    })
+    app.service('departments').create({
+      name: 'Other'
     });*/
+    
 
     return result
   }
