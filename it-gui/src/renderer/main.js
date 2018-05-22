@@ -5,6 +5,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import Feathers from '@feathersjs/feathers'
 import rest from '@feathersjs/rest-client'
 import auth from '@feathersjs/authentication-client'
+import locale from 'element-ui/lib/locale/lang/en'
 
 import App from './App'
 import router from './router'
@@ -23,9 +24,7 @@ if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
-Vue.use(ElementUI)
-
-const dept = process.env.DEPT === 'IT' ? 'it' : 'dept'
+Vue.use(ElementUI, {locale})
 
 /* eslint-disable no-new */
 new Vue({
@@ -35,5 +34,5 @@ new Vue({
   data: {
     feathers
   },
-  template: '<App dept="' + dept + '"/>'
+  template: '<App/>'
 }).$mount('#app')
