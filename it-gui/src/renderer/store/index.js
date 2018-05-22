@@ -8,7 +8,7 @@ Vue.use(Vuex)
 
 const state = {
   loggedIn: !!window.localStorage.getItem('feathers-jwt'),
-  loggedInUserId: jwt.decode(window.localStorage.getItem('feathers-jwt'), {complete: true}).payload.id,
+  loggedInUserId: window.localStorage.getItem('feathers-jwt') ? jwt.decode(window.localStorage.getItem('feathers-jwt'), {complete: true}).payload.id : null,
   depts: [
     {
       name: 'Other Department',

@@ -14,6 +14,12 @@ const sendTicketAnsweredMail = async hook => {
   return hook
 }
 
+const removeTicketsNotAssignedToSolver = hook => {
+  hook.result.data = hook.result.data.filter(ticket => ticket.state !== 'solved' && (ticket.state === 'unassigned' || ticket.solverId === hook.params.payload.id))
+
+  return hook
+}
+
 const isAnswer = hook => {
   return hook.data.answer
 }
@@ -83,7 +89,9 @@ module.exports = {
 
   after: {
     all: [],
-    find: [],
+    find: [
+      removeTicketsNotAssignedToSolver
+    ],
     get: [expandSecondaryQuestions, expandUser],
     create: [],
     update: [],

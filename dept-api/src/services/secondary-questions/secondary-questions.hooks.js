@@ -11,6 +11,12 @@ const isState = state => hook => {
   return hook.data.state === state
 }
 
+const removeSolvedQuestions = hook => {
+  hook.result.data = hook.result.data.filter(question => question.state !== 'solved') 
+
+  return hook
+}
+
 const attachUserId = hook => {
   hook.data.userId = hook.params.payload.userId
 }
@@ -89,7 +95,9 @@ module.exports = {
 
   after: {
     all: [],
-    find: [],
+    find: [
+      removeSolvedQuestions
+    ],
     get: [],
     create: [],
     update: [],
