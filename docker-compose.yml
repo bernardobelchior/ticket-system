@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  database:
+    build:
+      context: ./database
+    environment:
+      - POSTGRES_USER=postgres
+
+  redis:
+    image: redis:4-alpine
+
+  web:
+    build:
+      context: ./web
+    ports:
+      - "8080:8080"
+
+  it-api:
+    build:
+      context: ./it-api
+    ports:
+      - "4040:4040"
+    links:
+      - database
+
+  dept-api:
+    build:
+      context: ./dept-api
+    ports:
+      - "3030:3030"
+    links:
+      - database

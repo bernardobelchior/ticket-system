@@ -7,9 +7,11 @@ import Feathers from '@feathersjs/feathers'
 import axios from 'axios'
 import rest from '@feathersjs/rest-client'
 import auth from '@feathersjs/authentication-client'
+import locale from 'element-ui/lib/locale/lang/en'
 
 import App from './App'
 import router from './router'
+import store from './store'
 
 const feathers = Feathers()
 const restClient = rest(process.env.API_BASE_URL)
@@ -21,15 +23,25 @@ feathers.configure(restClient.axios(axios)).configure(
 )
 
 Vue.config.productionTip = false
-Vue.use(ElementUI)
+Vue.use(ElementUI, {locale})
 
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  data: {
-    feathers
-  },
-  template: '<App/>',
-  components: {App}
-})
+feathers.authenticate()
+  .then(result => {
+    store.commit('login', result.accessToken)
+  })
+  .catch(() => {
+    store.commit('logout')
+    router.push('/')
+  }).then(() => {
+    /* eslint-disable no-new */
+    new Vue({
+      el: '#app',
+      router,
+      store,
+      data: {
+        feathers
+      },
+      template: '<App/>',
+      components: {App}
+    })
+  })

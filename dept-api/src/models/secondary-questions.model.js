@@ -7,19 +7,37 @@ module.exports = function (app) {
   const sequelizeClient = app.get('sequelizeClient')
   const secondaryQuestions = sequelizeClient.define('secondary_questions', {
     title: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     description: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    ticketTitle: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    ticketDescription: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    creatorName: {
+      type: DataTypes.TEXT,
       allowNull: false
     },
     answer: {
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
     },
     state: {
       type: DataTypes.ENUM,
-      values: ['unassigned', 'assigned', 'waiting_for_answers', 'solved']
+      values: ['waiting_for_answers', 'solved'],
+      defaultValue: 'waiting_for_answers',
+      allowNull: false
+    },
+    originalId: { // Id from the IT API db
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   }, {
     hooks: {
@@ -30,7 +48,7 @@ module.exports = function (app) {
   })
 
   secondaryQuestions.associate = function (models) {
-    secondaryQuestions.belongsTo(models.users)
+    secondaryQuestions.belongsTo(models.users, {foreignKey: {allowNull: true}})
   }
 
   return secondaryQuestions

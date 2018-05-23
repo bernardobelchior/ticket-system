@@ -1,3 +1,4 @@
+require('dotenv').config()
 const path = require('path')
 const favicon = require('serve-favicon')
 const compress = require('compression')
@@ -20,6 +21,8 @@ const authentication = require('./authentication')
 const sequelize = require('./sequelize')
 
 const app = express(feathers())
+
+const rsmq = require('./messageQueues')(app)
 
 // Load app configuration
 app.configure(configuration())
@@ -52,5 +55,7 @@ app.use(express.notFound())
 app.use(express.errorHandler({logger}))
 
 app.hooks(appHooks)
+
+app.set('rsmq', rsmq)
 
 module.exports = app

@@ -6,28 +6,21 @@ const DataTypes = Sequelize.DataTypes
 module.exports = function (app) {
   const sequelizeClient = app.get('sequelizeClient')
   const tickets = sequelizeClient.define('tickets', {
-    authorName: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    authorEmail: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
     title: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     description: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     answer: {
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
     },
     state: {
       type: DataTypes.ENUM,
-      values: ['unassigned', 'assigned', 'waiting_for_answers', 'solved']
+      values: ['unassigned', 'assigned', 'waiting_for_answers', 'solved'],
+      defaultValue: 'unassigned'
     }
   }, {
     hooks: {
@@ -38,7 +31,8 @@ module.exports = function (app) {
   })
 
   tickets.associate = function (models) {
-    tickets.belongsTo(models.users)
+    tickets.belongsTo(models.users, {foreignKey: {allowNull: false}})
+    tickets.belongsTo(models.solvers, {foreignKey: {allowNull: true}})
   }
 
   return tickets

@@ -53,4 +53,8 @@ app.use(express.errorHandler({logger}))
 
 app.hooks(appHooks)
 
+const rsmq = require('./messageQueues')(app)
+
+app.set('rsmq', rsmq)
+
 module.exports = app

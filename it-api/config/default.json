@@ -3,8 +3,8 @@
   "port": 3030,
   "public": "../public/",
   "paginate": {
-    "default": 10,
-    "max": 50
+    "default": 100,
+    "max": 500
   },
   "authentication": {
     "secret": "f904838de72bffceb961f0133a37a216c78d14554783d11bd0df458d4a61ffe79f5994fe32ef3f7d6aacb0798c78cb0d025124e6e840dea3bbe6edcb79be8d57ad6b9c5f329d7ec5a0ba7f0e5e4f43f7a4b603528f4a9193c1225d2453e9dccc97ee5c84b74af4faaf070d01fa81d027d76d8cc57bb03cfb8532ee6c383166098fe788d3a10397ab4bbfc85a593d6256f57be084ecd2e99ff4d83ffbe5dfeb8ddadf5c50ec41d9dc325014dce84041851c643e311ffc428708d9ec078b97862737f623094cffe6b1e5b63dbb5a40fc9199dc083f336aed5ee6fc2946e9f55bc6aa6a97cc555cdb3db2fd52230a0cf4b0a6c8a2a9bc2db7db45b102af51be4c6d",
