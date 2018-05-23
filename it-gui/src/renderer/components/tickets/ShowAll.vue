@@ -71,7 +71,20 @@ export default {
     }
   },
   mounted: function () {
-    this.$root.$data.feathers.service('tickets').find().then(results => {
+    this.$root.$data.feathers.service('tickets').find({
+      query: {
+        $or: [
+          {
+            state: { $in: ['waiting_for_answers', 'assigned'] },
+            solverId: this.$store.state.loggedInUserId
+          },
+          {
+            state: 'unassigned'
+          }
+        ]
+      }
+    }).then(results => {
+      console.log(results)
       this.$set(this, 'tickets', results.data)
     })
     this.$root.$data.feathers.service('tickets').on('patched', this.ticketUpdate)

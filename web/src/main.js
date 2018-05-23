@@ -24,14 +24,24 @@ feathers.configure(restClient.axios(axios)).configure(
 
 Vue.config.productionTip = false
 Vue.use(ElementUI, {locale})
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  store,
-  data: {
-    feathers
-  },
-  template: '<App/>',
-  components: {App}
-})
+
+feathers.authenticate()
+  .then(result => {
+    store.commit('login', result.accessToken)
+  })
+  .catch(() => {
+    store.commit('logout')
+    router.push('/')
+  }).then(() => {
+    /* eslint-disable no-new */
+    new Vue({
+      el: '#app',
+      router,
+      store,
+      data: {
+        feathers
+      },
+      template: '<App/>',
+      components: {App}
+    })
+  })

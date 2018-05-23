@@ -19,12 +19,8 @@ const notifyOtherDept = async context => {
       }
 
       rsmq.sendMessage({qname:"others", message: JSON.stringify(secondaryQuestion)}, function (err, resp) {
-        if (resp) {
-          console.log("Message sent. ID:", resp)
-          console.log(resp)
-        }
-        else {
-          console.log(err)
+        if (!resp) {
+          console.error(err)
         }
       })
     })
@@ -37,8 +33,6 @@ const updateTicketState = context => {
       ticketId: context.result.ticketId
     }
   }).then(results => {
-    console.log(results)
-    console.log(results.data.filter(question => question.state !== 'solved'))
     if (results.data.filter(question => question.state !== 'solved').length === 0) {
       return context.app.service('tickets').patch(context.result.ticketId, {
         state: 'assigned',

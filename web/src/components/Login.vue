@@ -35,9 +35,9 @@
           entity: 'user',
           email: this.form.email,
           password: this.form.password
-        }).then(() => {
+        }).then(response => {
           this.loginLoading = false
-          this.$store.commit('login')
+          this.$store.commit('login', response.accessToken)
           this.$router.push('/tickets/create')
         }).catch(e => {
           this.loginLoading = false
